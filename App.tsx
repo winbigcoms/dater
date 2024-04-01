@@ -1,24 +1,5 @@
-import { StyleSheet, StatusBar } from "react-native";
-import { Header } from "./src/component/header";
-import { SafeAreaProvider, SafeAreaView } from "react-native-safe-area-context";
-import { MainContents } from "./src/component/main";
+import { MainPage } from "page/main";
 
 export default function App() {
-  return (
-    <SafeAreaProvider>
-      <StatusBar />
-      <SafeAreaView style={styles.container}>
-        <Header />
-        <MainContents />
-      </SafeAreaView>
-    </SafeAreaProvider>
-  );
+  return <MainPage />;
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    alignItems: "center",
-    justifyContent: "center",
-  },
-});
