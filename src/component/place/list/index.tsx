@@ -1,37 +1,123 @@
-import { Dummy_PLACE, PLACE_TYPE } from "const";
+import { useNavigation, useRoute } from "@react-navigation/native";
+import {
+  Dummy_PLACE,
+  PLACE_SEARCH_TYPE,
+  PLACE_SEARCH_TYPE_CONVERT,
+  PLACE_TYPE,
+} from "const";
+import { useState } from "react";
 import {
   FlatList,
   Image,
-  ScrollView,
   StyleSheet,
   Text,
+  TouchableOpacity,
   View,
 } from "react-native";
+import useImgModalStore from "store/imgModalStore";
 
 export const PlaceList = () => {
+  const { onOpenImgModal } = useImgModalStore();
+  const route = useRoute();
+  const navigation = useNavigation();
+
+  const [placeType, setPlaceType] =
+    useState<(typeof PLACE_SEARCH_TYPE)[number]>("ALL");
+
+  const onChangeSearchType = (type: (typeof PLACE_SEARCH_TYPE)[number]) => {
+    setPlaceType(type);
+  };
+
+  const onClickImg = (imgs: string[], order: number) => {
+    const imgUris = imgs.map((img) => ({ uri: img }));
+    onOpenImgModal({ imgs: imgUris, order });
+  };
+
+  const onClickPlaceMore = () => {
+    navigation.navigate("place" as never);
+  };
+
   return (
     <View style={PlaceListStyle.container}>
-      <Text style={PlaceListStyle.titleText}>우리들의 Wish Place</Text>
+      {route.name === "home" && (
+        <View>
+          <View style={PlaceListStyle.header}>
+            <Text style={PlaceListStyle.titleText}>우리들의 Wish Place</Text>
+            <TouchableOpacity onPress={onClickPlaceMore}>
+              <Text style={PlaceListStyle.moreItem}>더보기</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+      )}
+      {route.name === "place" && (
+        <View style={PlaceListStyle.placeSearchView}>
+          {PLACE_SEARCH_TYPE.map((type) => (
+            <TouchableOpacity
+              key={type}
+              onPress={() => {
+                onChangeSearchType(type);
+              }}
+            >
+              <View
+                style={{
+                  ...PlaceListStyle.placeSearchViewItem,
+                  ...(type === placeType &&
+                    PlaceListStyle.SelectedPlaceSearchViewItem),
+                }}
+              >
+                <Text
+                  style={
+                    type === placeType &&
+                    PlaceListStyle.SelectedPlaceSearchViewItemText
+                  }
+                >
+                  {PLACE_SEARCH_TYPE_CONVERT[type]}
+                </Text>
+              </View>
+            </TouchableOpacity>
+          ))}
+        </View>
+      )}
       <FlatList
-        data={Dummy_PLACE}
+        data={Dummy_PLACE.filter((data) =>
+          placeType === "ALL"
+            ? true
+            : placeType === "isVisited"
+            ? data.isVisited
+            : !data.isVisited
+        )}
         keyExtractor={(place) => place.id}
         renderItem={({ item }) => (
           <View style={PlaceListStyle.placeItem}>
             <Text style={PlaceListStyle.placeItemTitle}>
               {item.title} / {PLACE_TYPE[item.tag]}
-              {item.date && `/ ${item.date}`}
+              {item.date && ` / ${item.date}`}
             </Text>
             <View style={PlaceListStyle.imgContainer}>
-              {item.imgs.map((imgUrl) => (
+              {item.imgs.length === 0 ? (
                 <Image
-                  key={imgUrl}
-                  source={{ uri: imgUrl }}
+                  key="none"
+                  source={require("../../../imgs/empty.png")}
                   style={PlaceListStyle.img}
                 />
-              ))}
+              ) : (
+                item.imgs.map((imgUrl, order) => (
+                  <TouchableOpacity
+                    key={imgUrl}
+                    onPress={() => {
+                      onClickImg(item.imgs, order);
+                    }}
+                  >
+                    <Image
+                      source={{ uri: imgUrl }}
+                      style={PlaceListStyle.img}
+                    />
+                  </TouchableOpacity>
+                ))
+              )}
             </View>
             <Text style={PlaceListStyle.placeMemo} numberOfLines={1}>
-              {item.memo}
+              {item.memo || "메모된 것이 없어요!"}
             </Text>
           </View>
         )}
@@ -43,12 +129,47 @@ export const PlaceList = () => {
 const PlaceListStyle = StyleSheet.create({
   container: {
     flex: 5,
+    borderTopColor: "gray",
+    borderTopWidth: 2,
+  },
+  header: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+    paddingRight: 10,
+    shadowOffset: {
+      width: 1,
+      height: -1,
+    },
   },
   titleText: {
     paddingVertical: 5,
     paddingHorizontal: 10,
     fontWeight: "bold",
     fontSize: 16,
+  },
+  moreItem: {
+    fontSize: 12,
+    textDecorationLine: "underline",
+    textDecorationColor: "#ccc",
+  },
+  placeSearchView: {
+    flexDirection: "row",
+    padding: 10,
+    gap: 10,
+  },
+  placeSearchViewItem: {
+    borderWidth: 1,
+    paddingVertical: 3,
+    paddingHorizontal: 5,
+    borderRadius: 5,
+    borderColor: "pink",
+  },
+  SelectedPlaceSearchViewItem: {
+    backgroundColor: "pink",
+  },
+  SelectedPlaceSearchViewItemText: {
+    color: "white",
   },
   placeItem: {
     padding: 10,
@@ -70,6 +191,6 @@ const PlaceListStyle = StyleSheet.create({
     height: 90,
   },
   placeMemo: {
-    width: "85%",
+    width: "90%",
   },
 });

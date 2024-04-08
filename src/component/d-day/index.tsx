@@ -1,13 +1,17 @@
+import dayjs from "dayjs";
+import "dayjs/locale/ko";
 import { START_DATE } from "const";
 import { FlatList, StyleSheet, Text, View } from "react-native";
 import { get_day_list_10 } from "utill/date";
+
+dayjs.locale("ko");
 
 export const DdayCounter = () => {
   const dateList = get_day_list_10(START_DATE);
 
   return (
     <View style={DdayCounterStyleSheet.flexItemBox}>
-      <Text style={DdayCounterStyleSheet.titleText}>다가오는 기념일</Text>
+      <Text style={DdayCounterStyleSheet.titleText}>기념일</Text>
       <FlatList
         data={dateList}
         keyExtractor={(item) => item.title}
@@ -17,7 +21,9 @@ export const DdayCounter = () => {
               <Text style={DdayCounterStyleSheet.fletItemDday}>
                 {item.title}
               </Text>
-              <Text>{item.date.format("YYYY-MM-DD")}</Text>
+              <Text>
+                {item.date.format("YYYY-MM-DD")}({item.date.format("ddd")})
+              </Text>
             </View>
             <View>
               <Text style={DdayCounterStyleSheet.fletItemDday}>
@@ -33,11 +39,12 @@ export const DdayCounter = () => {
 
 const DdayCounterStyleSheet = StyleSheet.create({
   flexItemBox: {
-    flex: 2.5,
+    flex: 1.75,
     borderBottomWidth: 1,
     borderBottomColor: "#c0c0c0",
     paddingTop: 5,
-    backgroundColor: "#FFD6D6",
+    borderTopLeftRadius: 15,
+    borderTopRightRadius: 15,
   },
   titleText: {
     paddingHorizontal: 10,

@@ -8,3 +8,5 @@ export interface PLACE_INFO {
   id: string;
   date?: string;
 }
+
+// export type PLACE_SEARCH_TYPE = "ALL" | "isVisited" | "notVisited";

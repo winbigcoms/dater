@@ -36,8 +36,8 @@ const MainContentsHeaderStyle = StyleSheet.create({
   },
   dateInfo: {
     position: "absolute",
-    left: 0,
-    top: 0,
+    left: 10,
+    top: 10,
   },
   dateInfoText: {
     color: "#fff",

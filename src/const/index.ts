@@ -8,11 +8,28 @@ export const PLACE_TYPE = {
   food: "맛집",
 };
 
+export const PLACE_SEARCH_TYPE = ["ALL", "isVisited", "notVisited"] as const;
+
+export const PLACE_SEARCH_TYPE_CONVERT = {
+  ALL: "모두 보기",
+  isVisited: "같이 가본 곳",
+  notVisited: "같이 가볼 곳",
+};
+
 export const Dummy_PLACE: PLACE_INFO[] = [
   {
     title: "화담숲",
     link: "https://m.hwadamsup.com/",
     id: "testes",
+    imgs: [],
+    isVisited: false,
+    tag: "travel",
+    memo: "",
+  },
+  {
+    title: "에버랜드",
+    link: "",
+    id: "everland",
     imgs: [],
     isVisited: false,
     tag: "travel",
