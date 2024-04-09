@@ -15,6 +15,7 @@ import {
   View,
 } from "react-native";
 import useImgModalStore from "store/imgModalStore";
+import { COLOR_PALETTE } from "style/color";
 
 export const PlaceList = () => {
   const { onOpenImgModal } = useImgModalStore();
@@ -35,6 +36,11 @@ export const PlaceList = () => {
 
   const onClickPlaceMore = () => {
     navigation.navigate("place" as never);
+  };
+
+  const onClickTItle = (id: string) => {
+    // @ts-ignore
+    navigation.navigate("placeDetail", { id });
   };
 
   return (
@@ -89,10 +95,17 @@ export const PlaceList = () => {
         keyExtractor={(place) => place.id}
         renderItem={({ item }) => (
           <View style={PlaceListStyle.placeItem}>
-            <Text style={PlaceListStyle.placeItemTitle}>
-              {item.title} / {PLACE_TYPE[item.tag]}
-              {item.date && ` / ${item.date}`}
-            </Text>
+            <TouchableOpacity
+              style={{
+                alignSelf: "flex-start",
+              }}
+              onPress={() => onClickTItle(item.id)}
+            >
+              <Text style={PlaceListStyle.placeItemTitle}>
+                {item.title} / {PLACE_TYPE[item.tag]}
+                {item.date && ` / ${item.date}`}
+              </Text>
+            </TouchableOpacity>
             <View style={PlaceListStyle.imgContainer}>
               {item.imgs.length === 0 ? (
                 <Image
@@ -131,6 +144,7 @@ const PlaceListStyle = StyleSheet.create({
     flex: 5,
     borderTopColor: "gray",
     borderTopWidth: 2,
+    backgroundColor: COLOR_PALETTE.pink,
   },
   header: {
     flexDirection: "row",
@@ -157,6 +171,8 @@ const PlaceListStyle = StyleSheet.create({
     flexDirection: "row",
     padding: 10,
     gap: 10,
+    borderBottomWidth: 1,
+    borderBottomColor: COLOR_PALETTE.gray,
   },
   placeSearchViewItem: {
     borderWidth: 1,
@@ -174,12 +190,14 @@ const PlaceListStyle = StyleSheet.create({
   placeItem: {
     padding: 10,
     gap: 5,
-    borderBottomColor: "#ddd",
+    borderBottomColor: COLOR_PALETTE.gray,
     borderBottomWidth: 1,
   },
   placeItemTitle: {
     fontWeight: "600",
     fontSize: 15,
+    color: COLOR_PALETTE.black,
+    marginBottom: 5,
   },
   imgContainer: {
     flex: 1,
@@ -192,5 +210,6 @@ const PlaceListStyle = StyleSheet.create({
   },
   placeMemo: {
     width: "90%",
+    color: COLOR_PALETTE.black,
   },
 });
