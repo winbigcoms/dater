@@ -3,11 +3,15 @@ import "dayjs/locale/ko";
 import { START_DATE } from "const";
 import { FlatList, StyleSheet, Text, View } from "react-native";
 import { get_day_list_10 } from "utill/date";
+import useUserStore from "store/userStore";
 
 dayjs.locale("ko");
 
 export const DdayCounter = () => {
+  const { uuid } = useUserStore();
   const dateList = get_day_list_10(START_DATE);
+
+  console.log(uuid);
 
   return (
     <View style={DdayCounterStyleSheet.flexItemBox}>
