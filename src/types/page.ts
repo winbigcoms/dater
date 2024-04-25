@@ -4,4 +4,5 @@ export type RootStackParamList = {
   placeDetail: {
     id: string;
   };
+  placeAdd: undefined;
 };
