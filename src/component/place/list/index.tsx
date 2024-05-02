@@ -142,8 +142,8 @@ export const PlaceList = () => {
 const PlaceListStyle = StyleSheet.create({
   container: {
     flex: 5,
-    borderTopColor: "gray",
-    borderTopWidth: 2,
+    borderTopColor: "#ccc",
+    borderTopWidth: 1,
     backgroundColor: COLOR_PALETTE.pink,
   },
   header: {

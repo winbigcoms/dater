@@ -8,10 +8,7 @@ import useUserStore from "store/userStore";
 dayjs.locale("ko");
 
 export const DdayCounter = () => {
-  const { uuid } = useUserStore();
   const dateList = get_day_list_10(START_DATE);
-
-  console.log(uuid);
 
   return (
     <View style={DdayCounterStyleSheet.flexItemBox}>
@@ -44,11 +41,11 @@ export const DdayCounter = () => {
 const DdayCounterStyleSheet = StyleSheet.create({
   flexItemBox: {
     flex: 1.75,
-    borderBottomWidth: 1,
     borderBottomColor: "#c0c0c0",
     paddingTop: 5,
     borderTopLeftRadius: 15,
     borderTopRightRadius: 15,
+    backgroundColor: "#cfffe5",
   },
   titleText: {
     paddingHorizontal: 10,
@@ -56,8 +53,6 @@ const DdayCounterStyleSheet = StyleSheet.create({
     fontSize: 16,
   },
   fletItem: {
-    borderBottomWidth: 1,
-    borderBottomColor: "#c0c0c0",
     padding: 10,
     flex: 1,
     flexDirection: "row",
