@@ -12,9 +12,11 @@ import * as imagePicker from "expo-image-picker";
 import { COLOR_PALETTE } from "style/color";
 import { useState } from "react";
 import { upload_imgs } from "api/event";
+import useUserStore from "store/userStore";
 
 export const PlaceForm = () => {
   const { control, setFocus } = useForm();
+  const { uuid } = useUserStore();
   const [images, setImage] = useState<imagePicker.ImagePickerAsset[]>([]);
 
   const onRemoveImage = (idx: number) => {
@@ -50,7 +52,7 @@ export const PlaceForm = () => {
   };
 
   const onSubmit = async () => {
-    await upload_imgs(images);
+    await upload_imgs(images, uuid);
 
     console.log("test");
   };

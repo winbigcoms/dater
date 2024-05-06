@@ -15,7 +15,10 @@ export const get_event_data = async (owner: string) => {
   }
 };
 
-export const upload_imgs = async (images: imagePicker.ImagePickerAsset[]) => {
+export const upload_imgs = async (
+  images: imagePicker.ImagePickerAsset[],
+  uploader: string
+) => {
   const url = `${APIURL}/event-imgs`;
   const formData = new FormData();
   await Promise.all(
@@ -25,13 +28,14 @@ export const upload_imgs = async (images: imagePicker.ImagePickerAsset[]) => {
       })
     )
   );
+  formData.append("uploader", uploader);
   try {
-    const post = await fetch(url, {
+    const post: string[] = await fetch(url, {
       method: "POST",
       body: formData,
     }).then((res) => res.json());
-    console.log(post);
-    return [];
+
+    return post;
   } catch (err) {
     console.log(err);
     return [];
