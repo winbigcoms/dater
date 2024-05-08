@@ -52,9 +52,9 @@ export const PlaceForm = () => {
   };
 
   const onSubmit = async () => {
-    await upload_imgs(images, uuid);
+    const { s3_urls } = await upload_imgs(images, uuid);
 
-    console.log("test");
+    console.log(s3_urls);
   };
 
   return (
@@ -133,6 +133,9 @@ export const PlaceForm = () => {
           </TouchableOpacity>
         )}
       </View>
+      <TouchableOpacity onPress={onSubmit}>
+        <Text>일단 이미지 올리기</Text>
+      </TouchableOpacity>
     </View>
   );
 };
