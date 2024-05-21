@@ -5,7 +5,7 @@ export interface PLACE_INFO {
   link: string;
   isVisited: boolean;
   tag: "food" | "travel";
-  id: string;
+  id?: string;
   date?: string;
 }
 

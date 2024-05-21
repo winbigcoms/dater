@@ -1,5 +1,8 @@
+import * as FileSystem from "expo-file-system";
+
 export const convertUriToBlob = async (imageUri: string) => {
-  const response = await fetch(imageUri);
-  const blob = await response.blob();
+  const blob = await FileSystem.readAsStringAsync(imageUri, {
+    encoding: FileSystem.EncodingType.Base64,
+  });
   return blob;
 };

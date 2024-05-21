@@ -1,4 +1,10 @@
-import { Controller, Form, useForm } from "react-hook-form";
+import {
+  Controller,
+  FieldValues,
+  Form,
+  SubmitHandler,
+  useForm,
+} from "react-hook-form";
 import {
   Image,
   PermissionsAndroid,
@@ -11,11 +17,14 @@ import {
 import * as imagePicker from "expo-image-picker";
 import { COLOR_PALETTE } from "style/color";
 import { useState } from "react";
-import { upload_imgs } from "api/event";
+import { post_promise, upload_imgs } from "api/event";
 import useUserStore from "store/userStore";
+import { CustomTextInput } from "component/form";
+import { PLACE_INFO } from "types/place";
+import dayjs from "dayjs";
 
 export const PlaceForm = () => {
-  const { control, setFocus } = useForm();
+  const { control, setFocus, handleSubmit } = useForm();
   const { uuid } = useUserStore();
   const [images, setImage] = useState<imagePicker.ImagePickerAsset[]>([]);
 
@@ -43,18 +52,35 @@ export const PlaceForm = () => {
         selectionLimit: maxImg,
         mediaTypes: imagePicker.MediaTypeOptions.Images,
         quality: 0.8,
+        base64: true,
       });
       if (imgs.canceled) return;
+
       setImage((state) => [...state, ...imgs.assets]);
     } catch (err) {
       console.log(err);
     }
   };
 
-  const onSubmit = async () => {
-    const { s3_urls } = await upload_imgs(images, uuid);
+  const onSubmit = async (data: {
+    title: string;
+    link: string;
+    memo: string;
+  }) => {
+    const { title, memo, link } = data;
+    const s3_urls = await upload_imgs(images, uuid.split("-")[0]);
 
-    console.log(s3_urls);
+    const uploadData: PLACE_INFO = {
+      title,
+      memo,
+      imgs: s3_urls,
+      link,
+      isVisited: false,
+      tag: "travel",
+      date: dayjs().format("YYYY-MM-DD HH:mm:ss"),
+    };
+
+    await post_promise(uploadData);
   };
 
   return (
@@ -63,16 +89,17 @@ export const PlaceForm = () => {
         name="title"
         control={control}
         rules={{ required: true }}
-        render={({ field: { onChange, value } }) => (
-          <TextInput
-            placeholder="같이 갈곳이 어딘가요?"
-            returnKeyType="next"
+        render={({ field: { onChange, value, ref } }) => (
+          <CustomTextInput
+            value={value}
+            controllerRef={ref}
             onSubmitEditing={() => {
               setFocus("link");
             }}
+            titleText="목적지"
+            placeholder="어디로 갈까요?"
+            returnKeyType="next"
             onChangeText={(value) => onChange(value)}
-            value={value}
-            style={PlaceFormStyle.inputBox}
           />
         )}
       />
@@ -81,16 +108,16 @@ export const PlaceForm = () => {
         control={control}
         rules={{ required: true }}
         render={({ field: { onChange, value, ref } }) => (
-          <TextInput
-            ref={ref}
+          <CustomTextInput
             placeholder="링크가 있나요?"
             returnKeyType="next"
             onSubmitEditing={() => {
               setFocus("memo");
             }}
+            controllerRef={ref}
+            titleText="링크"
             onChangeText={(value) => onChange(value)}
             value={value}
-            style={PlaceFormStyle.inputBox}
           />
         )}
       />
@@ -99,12 +126,12 @@ export const PlaceForm = () => {
         control={control}
         rules={{ required: true }}
         render={({ field: { onChange, value, ref } }) => (
-          <TextInput
-            ref={ref}
+          <CustomTextInput
+            controllerRef={ref}
             placeholder="메모할 내용이 있나요?"
+            titleText="메모"
             onChangeText={(value) => onChange(value)}
             value={value}
-            style={PlaceFormStyle.inputBox}
           />
         )}
       />
@@ -133,8 +160,14 @@ export const PlaceForm = () => {
           </TouchableOpacity>
         )}
       </View>
-      <TouchableOpacity onPress={onSubmit}>
-        <Text>일단 이미지 올리기</Text>
+      <TouchableOpacity onPress={handleSubmit(onSubmit)}>
+        <Text
+          style={{
+            textAlign: "right",
+          }}
+        >
+          언젠가 같이 하기!
+        </Text>
       </TouchableOpacity>
     </View>
   );
@@ -145,14 +178,6 @@ const PlaceFormStyle = StyleSheet.create({
     backgroundColor: COLOR_PALETTE.pink,
     flex: 1,
     padding: 20,
-  },
-  inputBox: {
-    borderColor: COLOR_PALETTE.gray,
-    borderWidth: 1,
-    paddingVertical: 10,
-    paddingLeft: 5,
-    borderRadius: 5,
-    marginBottom: 10,
   },
   imgContainer: {
     flex: 1,

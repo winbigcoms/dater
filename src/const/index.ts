@@ -2,8 +2,8 @@ import { PLACE_INFO } from "types/place";
 
 export const START_DATE = "2022-09-17";
 export const MAIN_TITLE = "시작...!";
-export const APIURL =
-  "http://ec2-43-203-226-61.ap-northeast-2.compute.amazonaws.com:8000/withyou";
+// export const APIURL = "http://192.168.133.112:8000/withyou";
+export const APIURL = "https://43.203.226.61.nip.io/withyou";
 export const PLACE_TYPE = {
   travel: "여행",
   food: "맛집",

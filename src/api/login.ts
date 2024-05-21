@@ -4,7 +4,6 @@ import { makeQueryString } from "utill/api";
 
 export const login = async (email: string) => {
   const url = `${APIURL}/login?${makeQueryString({ email }).toString()}`;
-
   try {
     const loginDataJSON = await fetch(url);
 

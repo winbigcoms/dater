@@ -6,10 +6,11 @@ import { getItem, setItem } from "utill/asyncStorage";
 
 export const useLogin = () => {
   const { setUserId, setUserLogin } = useUserStore();
-
+  console.log("test");
   const checkLogin = async () => {
     const savedId = await getItem("uuid");
     const loginData = await login("bigcoms6290@gmail.com");
+    console.log(loginData, "loginData");
     if (!loginData) return;
 
     setUserLogin(loginData);
