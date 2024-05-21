@@ -62,11 +62,7 @@ export const PlaceForm = () => {
     }
   };
 
-  const onSubmit = async (data: {
-    title: string;
-    link: string;
-    memo: string;
-  }) => {
+  const onSubmit = async (data: FieldValues) => {
     const { title, memo, link } = data;
     const s3_urls = await upload_imgs(images, uuid.split("-")[0]);
 
