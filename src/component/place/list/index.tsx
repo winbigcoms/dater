@@ -1,4 +1,6 @@
 import { useNavigation, useRoute } from "@react-navigation/native";
+import { useQuery } from "@tanstack/react-query";
+import { get_event, get_promises_by_event } from "api/event";
 import {
   Dummy_PLACE,
   PLACE_SEARCH_TYPE,
@@ -14,17 +16,22 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
+import { useEventStore } from "store/eventStore";
 import useImgModalStore from "store/imgModalStore";
 import { COLOR_PALETTE } from "style/color";
 
 export const PlaceList = () => {
   const { onOpenImgModal } = useImgModalStore();
+  const { id: eventId } = useEventStore();
   const route = useRoute();
   const navigation = useNavigation();
-
   const [placeType, setPlaceType] =
     useState<(typeof PLACE_SEARCH_TYPE)[number]>("ALL");
-
+  const { data } = useQuery({
+    queryKey: [eventId, "EventPlaceList"],
+    queryFn: () => get_promises_by_event(eventId),
+    enabled: Boolean(eventId),
+  });
   const onChangeSearchType = (type: (typeof PLACE_SEARCH_TYPE)[number]) => {
     setPlaceType(type);
   };
@@ -85,7 +92,7 @@ export const PlaceList = () => {
         </View>
       )}
       <FlatList
-        data={Dummy_PLACE.filter((data) =>
+        data={(data || []).filter((data) =>
           placeType === "ALL"
             ? true
             : placeType === "isVisited"

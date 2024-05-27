@@ -9,7 +9,7 @@ export interface EVENT_DATA {
 }
 
 export interface EVENT extends EVENT_DATA {
-  setEVENT: (event: EVENT_DATA) => void;
+  setEvent: (event: EVENT_DATA) => void;
 }
 
 export const useEventStore = create<EVENT>((set) => ({
@@ -18,7 +18,7 @@ export const useEventStore = create<EVENT>((set) => ({
   date: "",
   opponent_name: "",
   owner: "",
-  setEVENT: (event) => {
+  setEvent: (event) => {
     set(() => event);
   },
 }));

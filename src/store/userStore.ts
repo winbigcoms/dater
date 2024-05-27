@@ -3,7 +3,7 @@ import { create } from "zustand";
 export interface UserLoginData {
   userId: string;
   name: string;
-  mainEvent: "";
+  main_event: "";
 }
 export interface UserInfo extends UserLoginData {
   uuid: string;
@@ -15,7 +15,7 @@ const useUserStore = create<UserInfo>((set) => ({
   uuid: "",
   userId: "",
   name: "",
-  mainEvent: "",
+  main_event: "",
   setUserId: (uuid: string) => {
     set(() => ({ uuid }));
   },

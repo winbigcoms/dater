@@ -1,16 +1,9 @@
-import {
-  Controller,
-  FieldValues,
-  Form,
-  SubmitHandler,
-  useForm,
-} from "react-hook-form";
+import { Controller, FieldValues, useForm } from "react-hook-form";
 import {
   Image,
   PermissionsAndroid,
   StyleSheet,
   Text,
-  TextInput,
   TouchableOpacity,
   View,
 } from "react-native";
@@ -20,12 +13,16 @@ import { useState } from "react";
 import { post_promise, upload_imgs } from "api/event";
 import useUserStore from "store/userStore";
 import { CustomTextInput } from "component/form";
-import { PLACE_INFO } from "types/place";
+import { PLACE_INFO, UPLOAD_PLACE_INFO } from "types/place";
 import dayjs from "dayjs";
+import { useNavigation } from "@react-navigation/native";
+import { useEventStore } from "store/eventStore";
 
 export const PlaceForm = () => {
   const { control, setFocus, handleSubmit } = useForm();
+  const { id: eventId } = useEventStore();
   const { uuid } = useUserStore();
+  const navigation = useNavigation();
   const [images, setImage] = useState<imagePicker.ImagePickerAsset[]>([]);
 
   const onRemoveImage = (idx: number) => {
@@ -66,7 +63,7 @@ export const PlaceForm = () => {
     const { title, memo, link } = data;
     const s3_urls = await upload_imgs(images, uuid.split("-")[0]);
 
-    const uploadData: PLACE_INFO = {
+    const uploadData: UPLOAD_PLACE_INFO = {
       title,
       memo,
       imgs: s3_urls,
@@ -74,9 +71,11 @@ export const PlaceForm = () => {
       isVisited: false,
       tag: "travel",
       date: dayjs().format("YYYY-MM-DD HH:mm:ss"),
+      event_id: eventId,
     };
 
     await post_promise(uploadData);
+    navigation.navigate("place" as never);
   };
 
   return (

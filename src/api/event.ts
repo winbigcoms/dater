@@ -2,7 +2,7 @@ import { APIURL } from "const";
 import { EVENT_DATA } from "store/eventStore";
 import { makeQueryString, make_pre_sign_url } from "utill/api";
 import * as imagePicker from "expo-image-picker";
-import { PLACE_INFO } from "types/place";
+import { PLACE_INFO, UPLOAD_PLACE_INFO } from "types/place";
 
 export const get_events = async (owner: string) => {
   const url = `${APIURL}/events?${makeQueryString({ owner }).toString()}`;
@@ -16,19 +16,34 @@ export const get_events = async (owner: string) => {
   }
 };
 
-export const get_event = async (owner: string) => {
-  const url = `${APIURL}/events?${makeQueryString({ owner }).toString()}`;
+export const get_event = async (eventId: string) => {
+  const url = `${APIURL}/event/${eventId}`;
   try {
     const eventDataJSON = await fetch(url);
 
     const eventData: EVENT_DATA = await eventDataJSON.json();
     return eventData;
   } catch (err) {
-    return false;
+    console.log(err);
   }
 };
 
-export const post_promise = async (promiseData: PLACE_INFO) => {
+export const get_promises_by_event = async (eventId: string) => {
+  const url = `${APIURL}/promise?${makeQueryString({
+    event_id: eventId,
+  }).toString()}`;
+  try {
+    const promiseDatasJSON = await fetch(url);
+
+    const promiseDatas: PLACE_INFO[] = await promiseDatasJSON.json();
+    return promiseDatas;
+  } catch (err) {
+    console.log(err);
+    return [];
+  }
+};
+
+export const post_promise = async (promiseData: UPLOAD_PLACE_INFO) => {
   const url = `${APIURL}/promise`;
   try {
     const postPormiseResult: boolean = await fetch(url, {
@@ -38,8 +53,6 @@ export const post_promise = async (promiseData: PLACE_INFO) => {
       },
       body: JSON.stringify(promiseData),
     }).then((res) => res.json());
-
-    console.log(postPormiseResult);
   } catch (err) {
     console.log(err);
   }

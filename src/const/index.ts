@@ -26,6 +26,8 @@ export const Dummy_PLACE: PLACE_INFO[] = [
     isVisited: false,
     tag: "travel",
     memo: "",
+    event_id: "",
+    date: "2023-06-18",
   },
   {
     title: "에버랜드",
@@ -35,6 +37,8 @@ export const Dummy_PLACE: PLACE_INFO[] = [
     isVisited: false,
     tag: "travel",
     memo: "",
+    event_id: "",
+    date: "2023-06-18",
   },
   {
     title: "전주",
@@ -49,5 +53,6 @@ export const Dummy_PLACE: PLACE_INFO[] = [
     tag: "travel",
     memo: "날씨, 숙소, 음식 무엇하나 빠짐없이 완벽했던 여행이었다. 환영받는 여행같았다는 후기를 들으니 어찌 행복하지 않을 수 있을까",
     date: "2023-06-18",
+    event_id: "",
   },
 ];
