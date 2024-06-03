@@ -35,7 +35,6 @@ export const useLogin = () => {
       }
     } catch (err) {
       console.log(err);
-      console.log("loginErr");
     }
   };
 

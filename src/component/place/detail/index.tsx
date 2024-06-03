@@ -1,4 +1,5 @@
-import { Dummy_PLACE } from "const";
+import { useQuery } from "@tanstack/react-query";
+import { get_promise } from "api/event";
 import {
   Dimensions,
   FlatList,
@@ -26,11 +27,15 @@ export const PlaceDetail = (props: PlaceDetailProps) => {
     onOpenImgModal({ imgs: imgUris, order });
   };
 
-  const target = Dummy_PLACE.find((data) => data.id === id);
+  const { data: placeData } = useQuery({
+    queryKey: [id, "EventPlace"],
+    queryFn: () => get_promise(id),
+    enabled: Boolean(id),
+  });
 
   return (
     <View style={style.container}>
-      {target && (
+      {placeData && (
         <View style={style.placeItemContainer}>
           <View
             style={{
@@ -39,8 +44,8 @@ export const PlaceDetail = (props: PlaceDetailProps) => {
               gap: 5,
             }}
           >
-            <Text style={style.title}>{target.title}</Text>
-            <Text style={style.date}>{target.date}</Text>
+            <Text style={style.title}>{placeData.title}</Text>
+            <Text style={style.date}>{placeData.date}</Text>
           </View>
           <View>
             <ScrollView
@@ -50,14 +55,14 @@ export const PlaceDetail = (props: PlaceDetailProps) => {
               contentContainerStyle={{ paddingVertical: 20 }}
             >
               <FlatList
-                data={target.imgs}
+                data={placeData.imgs}
                 keyExtractor={(item) => item}
-                numColumns={target.imgs.length}
+                numColumns={placeData.imgs.length}
                 renderItem={({ item, index }) => (
                   <TouchableOpacity
                     key={item}
                     onPress={() => {
-                      onClickImg(target.imgs, index);
+                      onClickImg(placeData.imgs, index);
                     }}
                     style={{
                       backgroundColor: COLOR_PALETTE.gray,
@@ -78,7 +83,7 @@ export const PlaceDetail = (props: PlaceDetailProps) => {
           </View>
           <View>
             <Text style={style.memo}>메모</Text>
-            <Text style={style.memo}>{target.memo}</Text>
+            <Text style={style.memo}>{placeData.memo}</Text>
           </View>
         </View>
       )}

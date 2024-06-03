@@ -29,7 +29,7 @@ export const get_event = async (eventId: string) => {
 };
 
 export const get_promises_by_event = async (eventId: string) => {
-  const url = `${APIURL}/promise?${makeQueryString({
+  const url = `${APIURL}/promises?${makeQueryString({
     event_id: eventId,
   }).toString()}`;
   try {
@@ -40,6 +40,19 @@ export const get_promises_by_event = async (eventId: string) => {
   } catch (err) {
     console.log(err);
     return [];
+  }
+};
+
+export const get_promise = async (promiseId: string) => {
+  const url = `${APIURL}/promise/${promiseId}`;
+  try {
+    const promiseDatasJSON = await fetch(url);
+
+    const promiseDatas: PLACE_INFO = await promiseDatasJSON.json();
+    return promiseDatas;
+  } catch (err) {
+    console.log(err);
+    return false;
   }
 };
 
